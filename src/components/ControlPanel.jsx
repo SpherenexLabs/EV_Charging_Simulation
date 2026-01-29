@@ -10,6 +10,7 @@ function ControlPanel({
   isSimulating,
   onStartSimulation,
   onStopSimulation,
+  hasUploadedData,
 }) {
   const handleEnvironmentalChange = (key, value) => {
     setEnvironmentalData(prev => ({ ...prev, [key]: parseFloat(value) }))
@@ -220,6 +221,13 @@ function ControlPanel({
       </div>
 
       <div className="control-buttons">
+        {hasUploadedData && (
+          <div className="data-badge">
+            <span className="source-dot"></span>
+            Using Uploaded Data
+          </div>
+        )}
+        
         {!isSimulating ? (
           <motion.button
             className="button button-primary"

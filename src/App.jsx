@@ -4,6 +4,7 @@ import Header from './components/Header'
 import ControlPanel from './components/ControlPanel'
 import EnergyFlowVisualization from './components/EnergyFlowVisualization'
 import Dashboard from './components/Dashboard'
+import AdvancedCharts from './components/AdvancedCharts'
 import FileUploader from './components/FileUploader'
 import SimulationResults from './components/SimulationResults'
 import Report from './components/Report'
@@ -35,6 +36,9 @@ function App() {
     gridFlow: 0,
     evCharging: 0,
     efficiency: 0,
+    mpptEfficiency: 0,
+    dcDcEfficiency: 0,
+    inverterEfficiency: 0,
   })
 
   useEffect(() => {
@@ -52,8 +56,16 @@ function App() {
     const solarGeneration = calculateSolarGeneration()
     const evCharging = systemConfig.evChargingDemand
     
+    // Calculate component efficiencies
+    const mpptEfficiency = calculateMPPTEfficiency()
+    const dcDcEfficiency = calculateDCDCEfficiency()
+    const inverterEfficiency = calculateInverterEfficiency(evCharging)
+    
+    // Apply efficiency losses to solar generation
+    const solarWithLosses = solarGeneration * (mpptEfficiency / 100)
+    
     // Calculate energy balance
-    const { batteryFlow, gridFlow } = calculateEnergyBalance(solarGeneration, evCharging)
+    const { batteryFlow, gridFlow } = calculateEnergyBalance(solarWithLosses, evCharging)
     
     const efficiency = calculateEfficiency(solarGeneration, evCharging)
 
@@ -63,6 +75,9 @@ function App() {
       gridFlow,
       evCharging,
       efficiency,
+      mpptEfficiency,
+      dcDcEfficiency,
+      inverterEfficiency,
     })
   }
 
@@ -144,6 +159,45 @@ function App() {
     return netDemand > 0 ? netDemand : 0
   }
 
+  const calculateMPPTEfficiency = () => {
+    const { solarIrradiance, temperature } = environmentalData
+    // MPPT efficiency varies with irradiance and temperature
+    // Higher irradiance = better efficiency, higher temp = lower efficiency
+    const irradianceFactor = Math.min(solarIrradiance / 1000, 1)
+    const tempFactor = 1 - (Math.max(temperature - 25, 0) * 0.001)
+    const baseEfficiency = 98.5
+    const efficiency = baseEfficiency * irradianceFactor * tempFactor
+    return parseFloat(Math.max(Math.min(efficiency, 99.2), 92.0).toFixed(1))
+  }
+
+  const calculateDCDCEfficiency = () => {
+    const { batterySOC } = systemConfig
+    // DC/DC converter efficiency varies with battery state and load
+    // Optimal efficiency around 50-80% SOC
+    const socFactor = 1 - Math.abs(batterySOC - 65) * 0.0008
+    const baseEfficiency = 97.2
+    const efficiency = baseEfficiency * socFactor
+    return parseFloat(Math.max(Math.min(efficiency, 98.5), 90.0).toFixed(1))
+  }
+
+  const calculateInverterEfficiency = (load) => {
+    // Inverter efficiency varies with load
+    // Peak efficiency at 30-70% of rated capacity
+    const ratedCapacity = systemConfig.solarPanelCapacity
+    const loadFactor = load / ratedCapacity
+    let efficiency = 96.8
+    
+    if (loadFactor < 0.2) {
+      // Low load penalty
+      efficiency = 92.0 + (loadFactor / 0.2) * 4.8
+    } else if (loadFactor > 0.8) {
+      // High load penalty
+      efficiency = 96.8 - ((loadFactor - 0.8) / 0.2) * 2.8
+    }
+    
+    return parseFloat(Math.max(Math.min(efficiency, 97.5), 88.0).toFixed(1))
+  }
+
   const calculateEfficiency = (generation, consumption) => {
     if (consumption === 0) return 100
     const efficiency = (generation / consumption) * 100
@@ -198,6 +252,8 @@ function App() {
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.35, delay: 0.05, ease: 'easeOut' }}
           >
+            <FileUploader onFileUpload={handleFileUpload} />
+            
             <ControlPanel
               environmentalData={environmentalData}
               setEnvironmentalData={setEnvironmentalData}
@@ -206,8 +262,8 @@ function App() {
               isSimulating={isSimulating}
               onStartSimulation={handleStartSimulation}
               onStopSimulation={handleStopSimulation}
+              hasUploadedData={!!uploadedData}
             />
-            {/* <FileUploader onFileUpload={handleFileUpload} /> */}
           </motion.section>
 
           <motion.section
@@ -219,6 +275,12 @@ function App() {
             <Dashboard
               metrics={realTimeMetrics}
               isSimulating={isSimulating}
+            />
+
+            <AdvancedCharts
+              metrics={realTimeMetrics}
+              isSimulating={isSimulating}
+              systemConfig={systemConfig}
             />
 
             <Report

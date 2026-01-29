@@ -31,9 +31,28 @@ export async function simulateEMS(params) {
     const solarMultiplier = Math.max(0, Math.sin(Math.PI * timeOfDay)) // Solar variation
     
     // Calculate solar generation with environmental factors
-    const hourlyIrradiance = solarIrradiance * solarMultiplier
-    const tempCoefficient = 1 - (temperature - 25) * 0.004
-    const cloudFactor = 1 - (cloudCover / 100) * 0.7
+    let hourlyIrradiance = solarIrradiance * solarMultiplier
+    let tempCoefficient = 1 - (temperature - 25) * 0.004
+    let cloudFactor = 1 - (cloudCover / 100) * 0.7
+    
+    // Use uploaded data if available (override simulation parameters)
+    if (uploadedData && uploadedData.length > hour) {
+      const row = uploadedData[hour]
+      
+      // Attempt to map common column names
+      if (row.irradiance !== undefined) hourlyIrradiance = row.irradiance
+      if (row.solar_irradiance !== undefined) hourlyIrradiance = row.solar_irradiance
+      if (row.GHI !== undefined) hourlyIrradiance = row.GHI // Global Horizontal Irradiance
+      
+      if (row.temperature !== undefined) {
+        tempCoefficient = 1 - (row.temperature - 25) * 0.004
+      }
+      
+      if (row.cloud_cover !== undefined) {
+        cloudFactor = 1 - (row.cloud_cover / 100) * 0.7
+      }
+    }
+    
     const efficiency = 0.20 * tempCoefficient * cloudFactor
     
     const solarGen = (hourlyIrradiance / 1000) * solarPanelCapacity * efficiency
@@ -41,7 +60,16 @@ export async function simulateEMS(params) {
 
     // EV charging demand (varies by time of day)
     const demandMultiplier = hour >= 8 && hour <= 18 ? 1.2 : 0.8 // Higher during day
-    const evDemand = evChargingDemand * demandMultiplier
+    let evDemand = evChargingDemand * demandMultiplier
+    
+    // Override with uploaded demand data if available
+    if (uploadedData && uploadedData.length > hour) {
+      const row = uploadedData[hour]
+      if (row.ev_demand !== undefined) evDemand = row.ev_demand
+      if (row.demand !== undefined) evDemand = row.demand
+      if (row.consumption !== undefined) evDemand = row.consumption
+    }
+
     totalEnergyConsumed += evDemand
 
     // Energy Management Strategy with ML Optimization

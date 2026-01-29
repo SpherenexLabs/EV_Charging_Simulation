@@ -1,199 +1,451 @@
+/* ===================================
+   ENERGY FLOW VISUALIZATION - PROFESSIONAL DESIGN
+   =================================== */
+
 .energy-flow {
-  min-height: 320px;
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  padding-bottom: 20px;
 }
 
-.flow-dashboard {
+/* Main Flow Container */
+.flow-container {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0;
-  padding: 20px;
-  min-height: 280px;
+  justify-content: center;
+  align-items: stretch;
+  gap: 30px;
+  padding: 30px 20px;
+  min-width: 1100px;
 }
 
-.flow-section {
+/* Column Layout */
+.flow-column {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  flex: 1;
-}
-
-.section-header {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  color: var(--muted);
-  margin-bottom: 4px;
-  text-align: center;
-}
-
-.flow-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  display: flex;
   align-items: center;
-  gap: 14px;
-  transition: all 0.25s ease;
+  gap: 16px;
+  flex: 1;
+  max-width: 200px;
+}
+
+.column-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 8px 20px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+/* Component Cards */
+.component-card {
+  background: linear-gradient(145deg, var(--surface) 0%, rgba(255, 255, 255, 0.02) 100%);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 14px;
+  width: 100%;
+  max-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
   cursor: pointer;
 }
 
-.flow-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.15);
+.component-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.flow-card.large {
-  padding: 20px;
-  flex-direction: column;
-  align-items: center;
+.component-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(56, 189, 248, 0.25);
+}
+
+.component-card:hover::before {
+  opacity: 1;
+}
+
+.component-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.component-name {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
   text-align: center;
+  margin: 0;
 }
 
-.flow-card.solar {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), transparent);
-  border-color: rgba(245, 158, 11, 0.3);
+.component-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  margin: 2px 0;
 }
 
-.flow-card.grid {
-  background: linear-gradient(135deg, rgba(148, 163, 184, 0.08), transparent);
-  border-color: rgba(148, 163, 184, 0.3);
+.component-unit {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: -6px;
 }
 
-.flow-card.battery {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent);
-  border-color: rgba(59, 130, 246, 0.3);
+.component-info {
+  font-size: 9px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 3px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  margin-top: 2px;
 }
 
-.flow-card.ev {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), transparent);
-  border-color: rgba(34, 197, 94, 0.3);
+/* Card-Specific Styling */
+.component-card.solar {
+  border-color: rgba(245, 158, 11, 0.5);
+  background: linear-gradient(145deg, rgba(245, 158, 11, 0.08) 0%, var(--surface) 100%);
 }
 
-.card-icon {
-  flex-shrink: 0;
+.component-card.solar .component-icon {
+  color: #f59e0b;
 }
 
-.solar .card-icon { color: #f59e0b; }
-.grid .card-icon { color: #94a3b8; }
-.battery .card-icon { color: #3b82f6; }
-.ev .card-icon { color: #22c55e; }
+.component-card.solar:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 12px 40px rgba(245, 158, 11, 0.3);
+}
 
-.card-info {
-  flex: 1;
+.component-card.mppt {
+  border-color: rgba(251, 191, 36, 0.5);
+  background: linear-gradient(145deg, rgba(251, 191, 36, 0.08) 0%, var(--surface) 100%);
+}
+
+.component-card.mppt .component-icon {
+  color: #fbbf24;
+}
+
+.component-card.mppt:hover {
+  border-color: #fbbf24;
+  box-shadow: 0 12px 40px rgba(251, 191, 36, 0.3);
+}
+
+.component-card.converter {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: linear-gradient(145deg, rgba(139, 92, 246, 0.08) 0%, var(--surface) 100%);
+}
+
+.component-card.converter .component-icon {
+  color: #8b5cf6;
+}
+
+.component-card.converter:hover {
+  border-color: #8b5cf6;
+  box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+}
+
+.component-card.battery {
+  border-color: rgba(59, 130, 246, 0.5);
+  background: linear-gradient(145deg, rgba(59, 130, 246, 0.08) 0%, var(--surface) 100%);
+  min-height: 150px;
+}
+
+.component-card.battery .component-icon {
+  color: #3b82f6;
+}
+
+.component-card.battery:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3);
+}
+
+.component-card.inverter {
+  border-color: rgba(236, 72, 153, 0.5);
+  background: linear-gradient(145deg, rgba(236, 72, 153, 0.08) 0%, var(--surface) 100%);
+}
+
+.component-card.inverter .component-icon {
+  color: #ec4899;
+}
+
+.component-card.inverter:hover {
+  border-color: #ec4899;
+  box-shadow: 0 12px 40px rgba(236, 72, 153, 0.3);
+}
+
+.component-card.ev {
+  border-color: rgba(34, 197, 94, 0.5);
+  background: linear-gradient(145deg, rgba(34, 197, 94, 0.08) 0%, var(--surface) 100%);
+}
+
+.component-card.ev .component-icon {
+  color: #22c55e;
+}
+
+.component-card.ev:hover {
+  border-color: #22c55e;
+  box-shadow: 0 12px 40px rgba(34, 197, 94, 0.3);
+}
+
+.component-card.grid {
+  border-color: rgba(148, 163, 184, 0.5);
+  background: linear-gradient(145deg, rgba(148, 163, 184, 0.08) 0%, var(--surface) 100%);
+}
+
+.component-card.grid .component-icon {
+  color: #94a3b8;
+}
+
+.component-card.grid:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 12px 40px rgba(148, 163, 184, 0.3);
+}
+
+/* Battery-Specific Components */
+.battery-indicator {
+  width: 100%;
+  margin-top: 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
-.card-title {
-  font-size: 13px;
+.battery-bar-container {
+  width: 100%;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 9px;
+  overflow: hidden;
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  position: relative;
+}
+
+.battery-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+  border-radius: 10px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+}
+
+.battery-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.battery-percentage {
+  font-size: 11px;
+  font-weight: 700;
+  color: #3b82f6;
+  text-align: center;
+  display: block;
+}
+
+.battery-status-badge {
+  font-size: 9px;
   font-weight: 600;
-  color: var(--muted);
+  padding: 4px 12px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 6px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.card-value {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1;
+.battery-status-badge.charging {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
-.card-value span {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--muted);
-  margin-left: 4px;
+.battery-status-badge.discharging {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
-.card-meta {
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 500;
+.battery-status-badge.idle {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+  border: 1px solid rgba(148, 163, 184, 0.3);
 }
 
+/* Flow Connectors - Vertical */
 .flow-connector {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: -8px;
-  padding: 0 8px;
-  position: relative;
-  opacity: 0.4;
-}
-
-.arrow-icon {
-  color: var(--accent);
-  margin-left: -12px;
-}
-
-.flow-particle {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  box-shadow: 0 0 12px var(--accent);
-}
-
-.battery-bar {
+  justify-content: center;
+  height: 80px;
   width: 100%;
-  height: 28px;
-  background: rgba(148, 163, 184, 0.15);
-  border-radius: 20px;
-  margin-top: 12px;
-  overflow: hidden;
+}
+
+.flow-connector.bidirectional {
+  border-left: 2px dashed rgba(56, 189, 248, 0.3);
+  border-right: 2px dashed rgba(56, 189, 248, 0.3);
+}
+
+.connector-arrow {
+  color: var(--accent);
+  opacity: 0.6;
+  filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.5));
+  z-index: 2;
+}
+
+/* Horizontal Connectors */
+.horizontal-connector {
   position: relative;
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  align-self: center;
 }
 
-.battery-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #22c55e);
-  border-radius: 20px;
-  transition: width 0.8s ease;
+.connector-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    rgba(56, 189, 248, 0.2) 0%, 
+    rgba(56, 189, 248, 0.6) 50%, 
+    rgba(56, 189, 248, 0.2) 100%
+  );
 }
 
-.battery-text {
+/* Energy Dots Animation */
+.energy-dot {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #38bdf8 0%, #0ea5e9 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 15px rgba(56, 189, 248, 0.8),
+    0 0 30px rgba(56, 189, 248, 0.5);
+  z-index: 3;
+}
+
+.energy-dot.horizontal {
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text);
-  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  transform: translateY(-50%);
 }
 
-/* Simulating state animations */
-.flow-card.simulating {
-  border-color: var(--accent);
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+/* Simulation State */
+.energy-flow.simulating .component-card {
+  animation: pulse-glow 3s ease-in-out infinite;
 }
 
-@media (max-width: 968px) {
-  .flow-dashboard {
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    box-shadow: 0 4px 30px rgba(56, 189, 248, 0.3);
+  }
+}
+
+.energy-flow.simulating .connector-arrow {
+  animation: arrow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes arrow-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .flow-container {
+    min-width: auto;
     flex-direction: column;
-    gap: 20px;
-    padding: 16px;
+    gap: 40px;
+    padding: 20px;
   }
 
-  .flow-section {
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .flow-connector {
-    transform: rotate(90deg);
-    padding: 12px 0;
-  }
-
-  .flow-card {
+  .flow-column {
     max-width: 100%;
+    width: 100%;
+  }
+
+  .component-card {
+    max-width: 100%;
+  }
+
+  .horizontal-connector {
+    transform: rotate(90deg);
+    min-height: 80px;
+    min-width: auto;
+  }
+
+  .connector-line {
+    width: 2px;
+    height: 100%;
+  }
+
+  .energy-dot.horizontal {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 768px) {
+  .component-card {
+    padding: 20px 16px;
+  }
+
+  .component-value {
+    font-size: 28px;
+  }
+
+  .component-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .column-title {
+    font-size: 11px;
+    padding: 6px 16px;
   }
 }
