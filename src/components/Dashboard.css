@@ -1,0 +1,210 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.metric-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.metric-card:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-2px);
+}
+
+.solar-metric {
+  --card-glow: rgba(255, 154, 0, 0.4);
+}
+
+.battery-metric {
+  --card-glow: rgba(114, 9, 183, 0.4);
+}
+
+.grid-metric {
+  --card-glow: rgba(247, 37, 133, 0.4);
+}
+
+.ev-metric {
+  --card-glow: rgba(168, 85, 247, 0.4);
+}
+
+.metric-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metric-label {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.metric-value {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  position: relative;
+  text-align: center;
+  line-height: 1;
+}
+
+.metric-status {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--accent-2);
+  display: inline-block;
+  margin-top: 8px;
+  border: 1px solid rgba(34, 197, 94, 0.35);
+}
+
+.metric-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 12px;
+  position: relative;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.metric-bar-fill {
+  height: 100%;
+  transition: width 0.4s ease;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.efficiency-gauge {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), transparent);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.efficiency-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.efficiency-value {
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--accent-2);
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  line-height: 1;
+}
+
+.efficiency-bar {
+  width: 100%;
+  max-width: 300px;
+  height: 14px;
+  background: rgba(148, 163, 184, 0.12);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.efficiency-bar-fill {
+  height: 100%;
+  transition: width 0.8s ease;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #22c55e 0%, #10b981 50%, #4ade80 100%);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+}
+
+@media (max-width: 640px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-value {
+    font-size: 28px;
+  }
+
+  .efficiency-value {
+    font-size: 40px;
+  }
+}
+
+.chart-container {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 16px;
+}
+
+.chart-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Simulating animations */
+.metric-card.simulating {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+@media (max-width: 768px) {
+  .metrics-grid {
+    flex-direction: column;
+  }
+  
+  .metric-card {
+    flex: 1 1 auto;
+    min-width: auto;
+  }
+}

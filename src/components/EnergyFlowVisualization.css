@@ -1,0 +1,199 @@
+.energy-flow {
+  min-height: 320px;
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-dashboard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  padding: 20px;
+  min-height: 280px;
+}
+
+.flow-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.section-header {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.flow-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.flow-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.15);
+}
+
+.flow-card.large {
+  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.flow-card.solar {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), transparent);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.flow-card.grid {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.08), transparent);
+  border-color: rgba(148, 163, 184, 0.3);
+}
+
+.flow-card.battery {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), transparent);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.flow-card.ev {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), transparent);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.card-icon {
+  flex-shrink: 0;
+}
+
+.solar .card-icon { color: #f59e0b; }
+.grid .card-icon { color: #94a3b8; }
+.battery .card-icon { color: #3b82f6; }
+.ev .card-icon { color: #22c55e; }
+
+.card-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.card-value span {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.card-meta {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.flow-connector {
+  display: flex;
+  align-items: center;
+  gap: -8px;
+  padding: 0 8px;
+  position: relative;
+  opacity: 0.4;
+}
+
+.arrow-icon {
+  color: var(--accent);
+  margin-left: -12px;
+}
+
+.flow-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent);
+}
+
+.battery-bar {
+  width: 100%;
+  height: 28px;
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 20px;
+  margin-top: 12px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.battery-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #22c55e);
+  border-radius: 20px;
+  transition: width 0.8s ease;
+}
+
+.battery-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* Simulating state animations */
+.flow-card.simulating {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+}
+
+@media (max-width: 968px) {
+  .flow-dashboard {
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px;
+  }
+
+  .flow-section {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .flow-connector {
+    transform: rotate(90deg);
+    padding: 12px 0;
+  }
+
+  .flow-card {
+    max-width: 100%;
+  }
+}
